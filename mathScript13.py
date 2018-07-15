@@ -12,6 +12,9 @@ A4 = 440
 C0 = A4 * pow(2, -4.75)
 print(C0)
 name = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+scale = ["1", "0", "0", "0", "1", "0", "0", "0", "0", "0", "0", "0"]
+
+newPitch = 0
 
 
 def pitch(freq):
@@ -118,9 +121,13 @@ counter = 0
 def get_line(strung):
     #strung = "G0 X12 Y3 F300 E27.9"
     global counter, inputFreq
+    #print("string: ", strung)
     if (";" in strung):
         strung = strung.split(";")
         strung = strung[0]
+    #print("strung", strung)
+    if (len(strung) < 3):
+        return 0
     strung = strung.split(" ")
     if ("E" not in strung):
         reduceFlag = 1
@@ -240,15 +247,22 @@ f.close
 # Re-open file here
 f2 = open(file + '.gcode', 'w')
 for line in linelist:
-    oldFr = get_fr(line.strip())
-    newFreq = get_line(line.strip())
-    # string = "F" +
-    #print("Old line: ", line)
-    print("Old feedrate: ", str(oldFr), ". New feedrate = ", hz_to_fr(newFreq))
-    #print("New line: ", line.replace("F" + str(oldFr), "F" + str(hz_to_fr(newFreq))))
-    line = line.replace("F" + str(oldFr), "F" + str(hz_to_fr(newFreq)))
-    f2.write(line)
-    cnt += 1
+
+    if ("F" in line.strip()):
+        #print(line)#.strip())
+        oldFr = get_fr(line)#.strip())
+        newFreq = get_line(line)#.strip())
+        if not ((newFreq == 0) or (newFreq is None)):
+        #print("oldFR ", oldFr, "newFR", hz_to_fr(newFreq))
+        #if newFreq is not None:
+        #if ((newFreq != 0)):
+        # string = "F" +
+        #print("Old line: ", line)
+            print("Old feedrate: ", str(oldFr),"\tNew feedrate = ", round(hz_to_fr(newFreq),3), "\tOld Frequency: ", inputFreq, "\t\tNew Frequency: ", newFreq, "\tNew note ", pitch(newFreq))
+            #print("New line: ", line.replace("F" + str(oldFr), "F" + str(hz_to_fr(newFreq))))
+            line = line.replace("F" + str(oldFr), "F" + str(hz_to_fr(newFreq)))
+            f2.write(line)
+            cnt += 1
 f2.close()
 print("total feedrates: ", counter, " total lines: ", cnt)
 print("File ", file + '.gcode', " created.")
