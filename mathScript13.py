@@ -12,7 +12,8 @@ A4 = 440
 C0 = A4 * pow(2, -4.75)
 print(C0)
 name = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-scale = ["1", "0", "0", "0", "1", "0", "0", "0", "0", "0", "0", "0"]
+scale = ["1", "0", "1", "0", "1", "1", "0", "1", "0", "1", "0", "1"]
+#scale = ["1", "0", "0", "0", "1", "0", "0", "0", "0", "0", "0", "0"]
 
 newPitch = 0
 
@@ -111,9 +112,14 @@ def hz_to_note(hz):
         #print("name[i], note: ", type(name[i]), ", ", type(note))
         #print("name[i]: ", name[i], ", ", note)
         if (name[i] == note):
+            tmp = 0
+            while (scale[i+tmp] != "1"):
+                tmp = tmp - 1
+
             #print("matching note found")
             #test(name[i], octave)
-            return test(pitch(hz))
+            return test(name[i+tmp]+str(octave))
+            #return test(pitch(hz))
 
 
 counter = 0
